@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+    <head>
+            <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+        <script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
+        <script src="https://code.highcharts.com/highcharts.js"></script>
+        <script src="https://code.highcharts.com/modules/exporting.js"></script>
+    </head>
+    <body>
+        <div id="demo"></div>
+        <script>
+            var options = {
+                title:{
+                    text:'資訊及通訊傳播業薪資成長圖'
+                },
+                plotOptions:{
+                    label: {
+                        connectorAllowed: false
+                    },
+                    pointStart:1980
+                },
+                xAxis:{
+                    title:{
+                        text:"年月"
+                    },
+                    categories:[]
+                },
+                yAxis:{
+                    title:{
+                        text:"薪資"
+                    }
+                },
+                series:[]
+            };
+
+            //Load xml data
+            $.get('https://www.dgbas.gov.tw/public/data/open/Cen/Mp05001.xml',function(xml){
+                var $xml = $(xml);
+                var year = [];
+                var seriesOption = {
+                    name:'資訊及通訊傳播業',
+                    data:[]
+                };
+                //push dateTime
+                $xml.find('每人每月總薪資').each(function(i,column){
+                    if($(column).children('年月別_Year_and_month').text().indexOf('M') == -1){                        
+                        options.xAxis.categories.push($(column).children('年月別_Year_and_month').text());
+                        seriesOption.data.push(parseInt($(column).children('資訊及通訊傳播業_Information_and_communication').text()));
+                    }                    
+                });
+
+
+                options.series.push(seriesOption);
+                $('#demo').highcharts(options);
+            });
+            
+        </script>		
+    </body>
+</html>
