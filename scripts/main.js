@@ -1,6 +1,16 @@
 $(document).ready(function(){
-    salaryHighCharts.yearSalary();
+    changeData(0);
 })
+
+var changeData = function(type){    
+    var data = getData();    
+    if(type == 0){
+        salaryHighCharts.yearSalary(parameter,data);
+    }
+    else if (type == 1){
+        salaryHighCharts.yearGrowthRate(parameter,data);
+    }
+}
 
 var parameter = {
     profession:['工業及服務業','工業','礦業及土石採取業','製造業','電力及燃氣供應業','用水供應及污染整治業','營造業','服務業','批發及零售業','運輸及倉儲業','住宿及餐飲業','資訊及通訊傳播業','金融及保險業','不動產業','專業科學及技術服務業','支援服務業','教育服務業','醫療保健服務業','藝術娛樂及休閒服務業','其他服務業'],
@@ -38,6 +48,7 @@ var parameter = {
         series:[]
     }
 }
+
 //Load Data
 var getData = function(){
     var salary = new Array();    
@@ -51,18 +62,16 @@ var getData = function(){
                         salary[j-1] = new Array();
                     }
                     salary[i,j-1].push(parseInt(data[i][keys[j]]));
-                }            
+                }
             }
         }
-    })      
+    })
     return salary;
 }
 var salaryHighCharts = {
     //年薪
-    yearSalary:function (){
-        parameter.config.series = [];    
-        var data = new Array();    
-        data = getData();    
+    yearSalary:function (parameter,data){
+        parameter.config.series = [];                        
         for(i=0; i < parameter.profession.length;i++){
             var seriesOption = {
                 name:parameter.profession[i],
@@ -73,10 +82,9 @@ var salaryHighCharts = {
         Highcharts.chart('demo',parameter.config);
     },
     //年薪增長率
-    yearGrowthRate:function(){
+    yearGrowthRate:function(parameter,data){
         parameter.config.series = [];
-        var growthRate = new Array();
-        var data = getData();
+        var growthRate = new Array();        
         for(i=0; i < data.length; i++){
             growthRate[i] = new Array();
             for(j=0 ;j < (data[i].length-1); j++){                                                                                                    
@@ -89,8 +97,7 @@ var salaryHighCharts = {
                 data:growthRate[i]
             }; 
             parameter.config.series.push(seriesOption);
-        }            
-        
+        }                    
         Highcharts.chart('demo',parameter.config);
     }
 }
