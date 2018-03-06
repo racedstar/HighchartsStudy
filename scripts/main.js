@@ -2,6 +2,8 @@ $(document).ready(function(){
     changeData(0);
 })
 
+
+//type 0=年薪  1=年薪成長率
 var changeData = function(type){    
     var data = getData();    
     if(type == 0){
@@ -68,22 +70,26 @@ var getData = function(){
     })
     return salary;
 }
+
+var drawingCharts = function(parameter,data){
+    parameter.config.series = [];
+    for(i=0; i < parameter.profession.length;i++){
+        var seriesOption = {
+            name:parameter.profession[i],
+            data:data[i]
+        };    
+        parameter.config.series.push(seriesOption);
+    }                    
+    Highcharts.chart('demo',parameter.config);
+}
+
 var salaryHighCharts = {
     //年薪
-    yearSalary:function (parameter,data){
-        parameter.config.series = [];                        
-        for(i=0; i < parameter.profession.length;i++){
-            var seriesOption = {
-                name:parameter.profession[i],
-                data:data[i]
-            };    
-            parameter.config.series.push(seriesOption);
-        }                    
-        Highcharts.chart('demo',parameter.config);
+    yearSalary:function (parameter,data){                          
+        drawingCharts(parameter,data);
     },
     //年薪增長率
-    yearGrowthRate:function(parameter,data){
-        parameter.config.series = [];
+    yearGrowthRate:function(parameter,data){        
         var growthRate = new Array();        
         for(i=0; i < data.length; i++){
             growthRate[i] = new Array();
@@ -91,13 +97,6 @@ var salaryHighCharts = {
                 growthRate[i][j] = parseFloat(((data[i][j+1] - data[i][j])*100 / data[i][j+1]).toFixed(3));
             }
         }
-        for(i=0; i < parameter.profession.length;i++){
-            var seriesOption = {
-                name:parameter.profession[i],
-                data:growthRate[i]
-            }; 
-            parameter.config.series.push(seriesOption);
-        }                    
-        Highcharts.chart('demo',parameter.config);
+        drawingCharts(parameter,growthRate);
     }
 }
