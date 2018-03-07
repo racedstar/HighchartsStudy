@@ -29,7 +29,7 @@ $(document).ready(function(){
         tooltip: {
             formatter:function(){
                 return this.x + '年<br>' + this.series.name + '：' + this.y;
-            }          
+            }
         },
         series: []
     }
@@ -60,15 +60,15 @@ var setConfigSeries = function(rawData, profession){
     return configData;
 }
 
-var getYearlySalary = function(rawData, profession){        
+var getYearlySalary = function(rawData, profession){
     return setConfigSeries(rawData, profession);
 }
 
 var getYearlyGrowth = function(rawData, profession){
-    var growthRate = new Array();        
+    var growthRate = new Array();
     for(i = 0; i < rawData.length; i++){
         growthRate[i] = new Array();
-        for(j = 0; j < (rawData[i].length - 1); j++){                                                                                                    
+        for(j = 0; j < (rawData[i].length - 1); j++){
             growthRate[i][j] = parseFloat(((rawData[i][j + 1] - rawData[i][j]) * 100 / rawData[i][j + 1]).toFixed(3));
         }
     }
@@ -77,13 +77,13 @@ var getYearlyGrowth = function(rawData, profession){
 
 //Load Data
 var getData = function(){
-    var salary = new Array();    
+    var salary = new Array();
     $.ajaxSettings.async = false;
-    $.getJSON('./data.json',function(data){    
-        var keys = Object.getOwnPropertyNames(data[0]);                
-        for(var i=0;i<data.length; i++){
-            if(data[i][keys[0]].indexOf('M') == -1){                         
-                for(var j = 1; j < keys.length; j++){                
+    $.getJSON('./data.json',function(data){
+        var keys = Object.getOwnPropertyNames(data[0]);
+        for(var i = 0; i < data.length; i++){
+            if(data[i][keys[0]].indexOf('M') == -1){
+                for(var j = 1; j < keys.length; j++){
                     if(i == 0){
                         salary[j-1] = new Array();
                     }
@@ -96,6 +96,6 @@ var getData = function(){
 }
 
 //繪圖
-var drawingCharts = function(config){              
+var drawingCharts = function(config){
     Highcharts.chart('demo',config);
 }
